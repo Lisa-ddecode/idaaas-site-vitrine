@@ -1,0 +1,489 @@
+/* ==========================================================================
+   IDAaaS — page d'accueil
+   Les valeurs viennent de theme.css (bloc @theme). Ne rien coder en dur ici :
+   une valeur en dur échappe à --ui-scale et casse le rendu une fois réduit.
+   ========================================================================== */
+
+@layer components {
+/* ==========================================================================
+   IDAaaS — page d'accueil
+   Styles propres à cette page. Le commun est dans ida.css.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Hero
+   -------------------------------------------------------------------------- */
+.hero { position: relative; isolation: isolate; padding-bottom: var(--spacing-block); }
+
+/* Trame quadrillée — ancrée en haut à droite de l'écran, et qui s'estompe
+   vers la gauche : pas de coupe nette, elle disparaît avant le titre.
+   La maille suit la fenêtre (≈ 10 % de sa largeur) et non --ui-scale,
+   sinon les cellules deviennent beaucoup trop serrées. */
+.hero::before {
+  content: ""; position: absolute; z-index: -1;
+  inset: calc(var(--entete-haut) * -1) 0 auto;   /* elle passe derrière le menu */
+  height: calc(100% + var(--entete-haut));
+  --maille: clamp(72px, 10px + 9.4vw, 190px);
+  --trait: 1.5px;
+  background-image:
+    linear-gradient(to right,  rgb(10 6 5 / .12) var(--trait), transparent var(--trait)),
+    linear-gradient(to bottom, rgb(10 6 5 / .12) var(--trait), transparent var(--trait));
+  background-size: var(--maille) var(--maille);
+  background-position: 100% 0;   /* la maille est calée sur le bord droit */
+  -webkit-mask-image:
+    linear-gradient(to left, #000 38%, rgb(0 0 0 / .35) 62%, transparent 88%),
+    linear-gradient(to bottom, #000 45%, transparent 96%);
+          mask-image:
+    linear-gradient(to left, #000 38%, rgb(0 0 0 / .35) 62%, transparent 88%),
+    linear-gradient(to bottom, #000 45%, transparent 96%);
+  -webkit-mask-composite: source-in;
+          mask-composite: intersect;
+}
+
+.hero__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: var(--spacing-card);
+  align-items: center;
+  padding-top: var(--spacing-block);
+}
+
+.hero__text { min-width: 0; }
+
+.hero__title {
+  margin-block: var(--spacing-tight);
+  text-transform: uppercase;
+}
+
+.hero__ask {
+  display: flex; align-items: center; gap: clamp(10px, 1.2vw, 20px);
+  margin-top: var(--spacing-block);
+  max-width: clamp(260px, 193.22px + 17.12vw, 522px);
+}
+
+.hero__cta { margin-top: var(--spacing-hero-cta); }
+
+/* Colonne illustration */
+.hero__figure { position: relative; }
+.hero__figure > img { width: 100%; height: auto; }
+
+/* Flux de requêtes — superposé à l'illustration, dans sa moitié basse,
+   chaque ligne se « tape » à l'écran en boucle (positions relevées sur l'original). */
+.hero__stream {
+  position: absolute;
+  left: 15%; top: 51%; right: 0;
+  /* Les lignes sont superposées : seule l'animation les écarte, ce qui
+     garantit un espacement régulier à tout instant. */
+  height: 9.2em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--text-stream);
+  line-height: 1.25;
+  color: var(--color-ida-ink);
+  pointer-events: none;
+}
+/* Chaque ligne monte à travers le bloc puis s'efface : c'est le flux.
+   Le texte, lui, se tape. Les deux animations partagent le même délai. */
+.hero__stream-line {
+  position: absolute;
+  top: 50%; left: 0; right: 0;
+  animation: idaStreamRise 12s linear infinite;
+}
+.hero__stream-line > span {
+  display: block;
+  width: max-content; max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  animation: idaStreamType 12s steps(60, end) infinite;
+}
+.hero__stream-line:nth-child(1), .hero__stream-line:nth-child(1) > span { animation-delay: -10s; }
+.hero__stream-line:nth-child(2), .hero__stream-line:nth-child(2) > span { animation-delay: -8s; }
+.hero__stream-line:nth-child(3), .hero__stream-line:nth-child(3) > span { animation-delay: -6s; }
+.hero__stream-line:nth-child(4), .hero__stream-line:nth-child(4) > span { animation-delay: -4s; }
+.hero__stream-line:nth-child(5), .hero__stream-line:nth-child(5) > span { animation-delay: -2s; }
+.hero__stream-line:nth-child(6), .hero__stream-line:nth-child(6) > span { animation-delay: 0s; }
+
+@keyframes idaStreamRise {
+  0%   { opacity: 0; transform: translateY(4.6em); }
+  6%   { opacity: 1; }
+  64%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-4.6em); }
+}
+
+.hero__stream-key  { color: var(--color-ida-orange-deep); }
+.hero__stream-note { color: var(--color-ida-orange-deep); font-style: italic; }
+
+@keyframes idaStreamType {
+  0%   { width: 0; }
+  11%  { width: max-content; }
+  100% { width: max-content; }
+}
+
+/* Pastilles flottantes — positions relevées sur le design d'origine,
+   exprimées en % de la boîte de l'illustration pour suivre son échelle. */
+.hero__art { position: relative; }
+.hero__art > img { width: 100%; height: auto; }
+
+.hero__badge {
+  position: absolute;
+  max-width: 46%;
+  display: grid; justify-items: center; text-align: center;
+  align-content: center;
+  padding: clamp(6px, .7vw, 14px) clamp(10px, 1.2vw, 24px);
+  background: var(--color-ida-cream-2);
+  color: var(--color-ida-ink);
+  border: var(--border-ink);
+  border-radius: var(--radius-badge);
+  font-family: var(--font-core);
+  line-height: 1.1;
+  white-space: nowrap;
+  /* la couleur est derrière, décalée — pas sur la pastille elle-même */
+  box-shadow: calc(var(--offset-x) * -1) var(--offset-y) 0 0 var(--badge-accent),
+              calc(var(--offset-x) * -1) var(--offset-y) 0 1px var(--color-ida-ink);
+  animation: idaFloat 6s ease-in-out infinite;
+  transform: translate(var(--dx, 0), var(--dy, 0));
+}
+.hero__badge b     { font-size: var(--text-badge-num);   font-weight: 400; }
+.hero__badge small { font-size: var(--text-badge-label); white-space: normal; color: var(--color-text-muted); }
+
+.hero__badge--rgpd       { right: 11.8%; top: 31%;  --badge-accent: var(--color-ida-pink);        animation-delay: -1s; }
+.hero__badge--gpu        { left: 6%;    top: 25%;  --badge-accent: var(--color-ida-orange);      animation-delay: 0s; }
+.hero__badge--predictive { right: 7.9%;  top: 76%;  --badge-accent: var(--color-ida-orange);      animation-delay: -3s; }
+.hero__badge--data       { left: 1%;    top: 84%;  --badge-accent: var(--color-ida-olive);       animation-delay: -4.5s; }
+
+@keyframes idaFloat {
+  0%, 100% { transform: translate(var(--dx, 0), var(--dy, 0)); }
+  50%      { transform: translate(var(--dx, 0), calc(var(--dy, 0px) - 14px)); }
+}
+
+@media (max-width: 999px) {
+  /* Une colonne, et le titre reste en premier : c'est lui qu'on doit lire d'abord */
+  .hero__body { grid-template-columns: minmax(0, 1fr); }
+  .hero__art { max-width: 340px; margin-inline: auto; }
+  .hero__ask { flex-wrap: nowrap; }
+}
+
+/* --------------------------------------------------------------------------
+   Promesses — accordéon.
+   Au-dessus de 1000px : horizontal, la carte ouverte s'élargit et le titre
+   des cartes repliées se lit à la verticale (203 → 892px, hauteur 728px).
+   En dessous : accordéon vertical classique, avec une bascule − / +.
+   Toutes les valeurs sont relevées sur les deux gabarits d'origine.
+   -------------------------------------------------------------------------- */
+.promises__head {
+  margin: 0 auto var(--spacing-block);
+  text-align: center;
+}
+.promises__head h2 {
+  margin: var(--spacing-tight) auto;
+  max-width: 20ch;              /* en ch du titre, sinon il déborde en grandissant */
+  font-size: var(--text-h2-section);
+  text-transform: uppercase;
+}
+
+.promises { display: flex; align-items: stretch; }
+
+.promise {
+  position: relative;
+  flex: 1 1 0;                 /* rapport replié */
+  min-width: 0;
+  height: var(--promise-h);
+  margin-left: -1px;
+  background: var(--color-surface-card);
+  border: var(--border-ink);
+  border-radius: var(--radius-promise);
+  overflow: hidden;
+  transition: flex-grow .45s cubic-bezier(.4, 0, .2, 1),
+              background-color .45s, border-radius .45s;
+}
+.promise:first-child { margin-left: 0; }
+
+.promise[data-open] {
+  flex-grow: 4.4;              /* 892 / 203, le rapport du design */
+  border-radius: var(--radius-promise-open);
+  background: var(--promise-bg);
+  z-index: 1;
+}
+
+/* --- Tranche repliée : numéro en haut, titre à la verticale ------------ */
+.promise__title { margin: 0; font: inherit; }
+
+.promise__toggle {
+  position: absolute; inset: 0 auto 0 0;
+  display: flex; flex-direction: column; align-items: center;
+  gap: var(--spacing-tight);
+  width: 100%;
+  padding-block: var(--promise-rail-pad);
+  background: none; border: 0; cursor: pointer;
+  color: inherit; font: inherit;
+  transition: opacity .3s;
+}
+.promise__num {
+  font-family: var(--font-sub);
+  font-size: var(--text-promise-num);
+  line-height: 1;
+  color: var(--color-ida-orange-deep);
+}
+.promise__label {
+  flex: 1 1 auto; min-height: 0;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);   /* lecture de bas en haut */
+  font-family: var(--font-sub);
+  font-size: var(--text-rail-label);
+  line-height: 1;
+  color: var(--color-ida-ink);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.promise[data-open] .promise__toggle {
+  inset: calc(var(--promise-pad) * 1.6) auto auto var(--promise-pad);
+  width: auto;
+  max-width: calc(68% - var(--promise-pad) * 2);
+  align-items: flex-start;
+  padding-block: 0;      /* le retrait du rail ne vaut que replié */
+  gap: .08em;
+}
+.promise[data-open] .promise__num { color: var(--promise-num); }
+.promise[data-open] .promise__label {
+  writing-mode: horizontal-tb;
+  transform: none;
+  font-size: var(--text-promise-title);
+  line-height: 1.08;
+  color: var(--promise-fg);
+  white-space: normal;   /* « Personnalisation » doit pouvoir passer à la ligne */
+  overflow: visible;
+  flex: 0 0 auto;
+}
+
+/* --- Panneau déplié ---------------------------------------------------- */
+.promise__panel {
+  position: absolute; inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--promise-pad);
+  padding: var(--promise-panel-top) calc(38% + var(--promise-pad)) var(--promise-pad) var(--promise-pad);
+  opacity: 0; visibility: hidden;
+  transition: opacity .35s .1s, visibility 0s .45s;
+  overflow: hidden;
+  color: var(--promise-fg);
+}
+.promise[data-open] .promise__panel {
+  opacity: 1; visibility: visible; transition: opacity .35s .1s, visibility 0s;
+}
+
+.promise__kicker {
+  font-family: var(--font-core);
+  font-size: var(--text-promise-kicker);
+  line-height: 1.2;
+  color: var(--promise-sub);
+}
+.promise__body {
+  margin-top: .7em;
+  font-size: var(--text-promise-body);
+  line-height: 1.35;
+  color: var(--promise-sub);
+  max-width: 24ch;
+}
+.promise__more {
+  display: inline-flex; align-items: center;
+  margin-top: var(--spacing-block);
+  min-height: var(--h-btn);
+  padding-inline: clamp(18px, 2.3vw, 44px);
+  background: var(--color-ida-cream-2);
+  border: var(--border-ink);
+  border-radius: var(--radius-input);
+  font-family: var(--font-sub);
+  font-size: var(--text-promise-cta);
+  color: var(--color-ida-ink);
+  /* même décalage que .ida-btn : les deux passent par les mêmes tokens */
+  box-shadow: calc(var(--offset-x) * -1) var(--offset-y) 0 0 var(--promise-shadow),
+              calc(var(--offset-x) * -1) var(--offset-y) 0 1px var(--color-ida-ink);
+  transition: transform .18s ease;
+}
+.promise__more:hover { transform: translateY(-6px); color: var(--color-ida-ink); }
+.promise__more:active { transform: translate(calc(var(--offset-x) * -1), var(--offset-y)); box-shadow: none; }
+
+/* Colonne de code : elle déborde volontairement en haut et en bas,
+   comme un flux qui défile derrière la fenêtre de la carte. */
+.promise__code {
+  display: none;
+  /* calé sur la carte : toute la hauteur, collé au bord droit */
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 38%;
+  padding: 0 0 0 var(--promise-pad);   /* le flux part du haut du panneau */
+  background: var(--color-ida-ink);
+  border-radius: 0 var(--radius-promise-open) var(--radius-promise-open) 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--text-promise-code);
+  line-height: 2.3;    /* le flux respire : ~13 lignes au panneau */
+  overflow: hidden;
+}
+.promise[data-open] .promise__code { display: block; }
+
+/* Piste dupliquée translatée de -50 % : la boucle est invisible. */
+.promise__code-track { animation: idaCodeScroll 26s linear infinite; }
+@keyframes idaCodeScroll {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50%); }
+}
+/* Les extrémités s'estompent dans le noir du panneau : deux dégradés
+   posés par-dessus, et non un masque qui laisserait voir la carte. */
+.promise__code::before,
+.promise__code::after {
+  content: "";
+  position: absolute; left: 0; right: 0;
+  height: 27%;
+  pointer-events: none;
+  z-index: 1;
+}
+.promise__code::before { top: 0;    background: linear-gradient(to bottom, var(--color-ida-ink), transparent); }
+.promise__code::after  { bottom: 0; background: linear-gradient(to top,    var(--color-ida-ink), transparent); }
+.promise__code > span { display: block; color: var(--color-ida-cream); }
+.promise__code { --code-pad: var(--promise-pad); }
+.promise__code .tok-path { color: var(--color-ida-cream); }
+.promise__code .tok-val  { color: var(--color-ida-sand); }
+.promise__code .tok-key  { color: var(--color-ida-orange); }
+.promise__code .tok-num  { color: var(--color-ida-pink); }
+.promise__code .tok-note { color: var(--color-ida-orange-deep); }
+
+/* --- Palettes, relevées carte par carte -------------------------------- */
+.promise--olive       { --promise-bg: var(--color-ida-olive);       --promise-fg: var(--color-ida-cream); --promise-sub: var(--color-ida-cream-2); --promise-num: var(--color-ida-sand);  --promise-shadow: var(--color-ida-orange); }
+.promise--pink        { --promise-bg: var(--color-ida-pink);        --promise-fg: var(--color-ida-ink);   --promise-sub: var(--color-ida-ink);     --promise-num: var(--color-ida-ink);   --promise-shadow: var(--color-ida-olive); }
+.promise--orange      { --promise-bg: var(--color-ida-orange);      --promise-fg: var(--color-ida-ink);   --promise-sub: var(--color-ida-ink);     --promise-num: var(--color-ida-ink);   --promise-shadow: var(--color-ida-pink); }
+.promise--sand        { --promise-bg: var(--color-ida-sand);        --promise-fg: var(--color-ida-ink);   --promise-sub: var(--color-ida-gray);    --promise-num: var(--color-ida-ink);   --promise-shadow: var(--color-ida-orange); }
+.promise--orange-deep { --promise-bg: var(--color-ida-orange-deep); --promise-fg: var(--color-ida-cream); --promise-sub: var(--color-ida-cream-2); --promise-num: var(--color-ida-cream); --promise-shadow: var(--color-ida-pink); }
+
+/* --- Sous 1000px : accordéon vertical, bascule − / + ------------------- */
+@media (max-width: 999px) {
+  .promises { flex-direction: column; gap: 10px; }
+
+  .promise,
+  .promise[data-open] {
+    /* en colonne, l'axe principal est la hauteur : sans ceci, la base
+       flex de 0 de la règle de base écrase les cartes. */
+    flex: 0 0 auto;
+    width: 100%; height: auto; margin-left: 0;
+    border-radius: var(--radius-promise);
+  }
+
+  .promise__toggle {
+    position: static;
+    width: 100%;
+    flex-direction: row; align-items: baseline;
+    gap: 14px;
+    padding: 16px 20px;
+    opacity: 1;
+  }
+  .promise[data-open] .promise__toggle {
+    opacity: 1; pointer-events: auto;
+    inset: auto; max-width: none;
+    padding: 16px 20px; gap: 14px;
+  }
+  .promise[data-open] .promise__num   { color: var(--promise-num); }
+  .promise[data-open] .promise__label { color: var(--promise-fg); }
+
+  .promise__label {
+    writing-mode: horizontal-tb;
+    transform: none;              /* pas de rotation une fois en pile */
+    font-size: var(--text-promise-title);
+    white-space: normal; text-align: left;
+  }
+
+  /* Le − / + à droite de la ligne */
+  .promise__toggle::after {
+    content: "+";
+    margin-left: auto;
+    font-family: var(--font-core);
+    font-size: var(--text-promise-body);
+    line-height: 1;
+  }
+  .promise[data-open] .promise__toggle::after { content: "−"; }
+
+  .promise__panel {
+    position: static;
+    grid-template-columns: minmax(0, 1fr);
+    padding: 0 20px 20px;
+    gap: 0;
+    display: none;
+  }
+  .promise[data-open] .promise__panel { display: grid; }
+  .promise__body { max-width: none; }
+  .promise__code {
+    /* en pile, le panneau n'a plus la hauteur de la carte : on le borne,
+       sinon les répétitions du défilement se déroulent toutes. */
+    position: relative; width: auto; height: 190px;
+    margin: 18px 0 0; padding: 16px;
+    border-radius: var(--radius-promise);
+    line-height: 1.9;
+  }
+  .promise__panel { padding-right: 20px; }
+  .promise__more { margin-top: var(--spacing-tight); }
+}
+
+/* --- Sans JavaScript : tout est ouvert --------------------------------- */
+.no-js .promises { flex-direction: column; gap: 16px; }
+.no-js .promise { flex: 0 0 auto; width: 100%; height: auto; margin-left: 0; background: var(--promise-bg); }
+.no-js .promise__toggle { position: static; width: 100%; flex-direction: row; align-items: baseline; gap: 14px; padding: 16px 20px; }
+.no-js .promise__label { writing-mode: horizontal-tb; transform: none; font-size: var(--text-promise-title); color: var(--promise-fg); }
+.no-js .promise__num { color: var(--promise-num); }
+.no-js .promise__panel { position: static; opacity: 1; visibility: visible; grid-template-columns: minmax(0,1fr); padding: 0 20px 20px; }
+.no-js .promise__code { display: none; }
+
+/* --------------------------------------------------------------------------
+   Pourquoi maintenant · Les 3 piliers — mêmes cartes, deux grilles
+   -------------------------------------------------------------------------- */
+.feature-grid {
+  display: grid;
+  gap: var(--spacing-card);
+  margin-top: var(--spacing-block);
+  /* la grille est plus étroite que la section : les cartes respirent */
+  max-width: 86%;
+  margin-inline: auto;
+}
+.feature-grid--2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); }
+.feature-grid--3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
+
+.feature {
+  padding: clamp(22px, 2.4vw, 46px);
+  background: var(--feature-bg, var(--color-surface-card));
+  color: var(--feature-fg, var(--color-text-body));
+  border: var(--border-ink);
+  border-radius: var(--radius-promise);
+}
+.feature--olive  { --feature-bg: var(--color-ida-olive);  --feature-fg: var(--color-ida-cream); }
+.feature--pink   { --feature-bg: var(--color-ida-pink);   --feature-fg: var(--color-ida-ink); }
+.feature--orange { --feature-bg: var(--color-ida-orange); --feature-fg: var(--color-ida-ink); }
+.feature img { width: var(--icon-lg); height: auto; margin-bottom: var(--spacing-tight); }
+.feature h3 { margin-bottom: var(--spacing-tight); color: var(--feature-fg, var(--color-text-body)); }
+.feature p { font-size: var(--text-body); color: var(--feature-fg, var(--color-text-muted)); }
+.feature__stat {
+  margin-top: var(--spacing-block);
+  font-family: var(--font-sub);
+  font-size: var(--text-body-sm);
+  color: var(--feature-fg, var(--color-ida-orange-deep));
+}
+
+.section__head { margin: 0 auto var(--spacing-block); text-align: center; }
+.section__head h2 {
+  margin: var(--spacing-tight) auto;
+  max-width: 33ch;              /* deux lignes, comme le design */
+  font-size: var(--text-h2-section);
+  text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------------------
+   Bandeau CTA
+   -------------------------------------------------------------------------- */
+.cta {
+  display: grid; gap: var(--spacing-card); justify-items: center; text-align: center;
+  margin-top: calc(var(--spacing-section) * .5);   /* écart aux cartes, resserré */
+  padding: var(--spacing-section) clamp(24px, 4vw, 88px);
+  background: var(--color-ida-olive);
+  border: var(--border-ink);
+  border-radius: var(--radius-banner);
+}
+.cta h2 { max-width: none; color: var(--color-ida-cream); }
+@media (min-width: 700px) { .cta h2 { white-space: nowrap; } }
+
+}

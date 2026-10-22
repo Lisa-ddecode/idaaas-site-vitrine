@@ -1,0 +1,161 @@
+/* ==========================================================================
+   IDAaaS — thème Tailwind
+   --------------------------------------------------------------------------
+   Tout ce qui est déclaré ici devient utilisable de deux façons :
+     1. comme classe utilitaire   → bg-ida-pink, text-h1, rounded-card, px-gutter
+     2. comme variable CSS        → var(--color-ida-pink)
+   C'est l'équivalent des Variables d'une bibliothèque de design : on change
+   une valeur ici, elle se propage sur tout le site.
+
+   Les valeurs fluides sont interpolées entre 390 px et 1920 px de large.
+   Forme : clamp(min, base + pente·vw, max), calculée et non estimée.
+   ========================================================================== */
+
+@theme {
+
+  /* --- Couleurs — relevées sur la bibliothèque XD ------------------------ */
+  --color-ida-ink: #0A0605;          /* texte, bordures */
+  --color-ida-cream: #FFF9F2;        /* fond de page */
+  --color-ida-cream-2: #FFF8EF;      /* fond de carte */
+  --color-ida-orange: #FF8846;       /* accent principal */
+  --color-ida-orange-deep: #D66634;  /* accent imagerie, survol */
+  --color-ida-pink: #FF5CBC;         /* CTA */
+  --color-ida-olive: #575630;        /* surface foncée */
+  --color-ida-gray: #413D3D;         /* texte secondaire */
+  --color-ida-beige: #F8ECDD;        /* remplissage doux */
+  --color-ida-sand: #F4DDC3;         /* puce active */
+
+  /* --- Rôles — on peint avec ceux-ci, pas avec la palette brute --------- */
+  --color-surface-page: var(--color-ida-cream);
+  --color-surface-card: var(--color-ida-cream-2);
+  --color-text-body: var(--color-ida-ink);
+  --color-text-muted: var(--color-ida-gray);
+  --color-text-inverse: var(--color-ida-cream);
+
+  /* --- Familles ---------------------------------------------------------- */
+  --font-display: "Archivo Black", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sub: "Cal Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-core: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* --- Interlignes ------------------------------------------------------- */
+  --leading-flat: 1;
+  --leading-title: 1.05;
+  --leading-body: 1.45;
+
+  /* --- Échelle typographique --------------------------------------------
+     Toutes ces tailles passent par --ui-scale (voir base.css) : une seule
+     valeur à changer pour réajuster l'ensemble du site.
+     max(…) = plancher de lisibilité, qui ne descend jamais sous le seuil
+     même si l'échelle globale est réduite. */
+  --text-h1: calc(clamp(31px, 21.059px + 2.5490vw, 70px) * var(--ui-scale));
+  --text-h2-section: calc(clamp(34px, 23.039px + 2.8105vw, 77px) * var(--ui-scale));
+  --text-h2: calc(clamp(26px, 17.843px + 2.0915vw, 58px) * var(--ui-scale));
+  --text-h3: calc(clamp(27px, 21.647px + 1.3725vw, 48px) * var(--ui-scale));
+  --text-h3-panel: calc(clamp(28px, 17.294px + 2.7451vw, 70px) * var(--ui-scale));
+  --text-numeral: calc(clamp(34px, 18.196px + 4.0523vw, 96px) * var(--ui-scale));
+  --text-nav: max(15px, calc(clamp(19px, 16.451px + 0.6536vw, 29px) * var(--ui-scale)));
+  --text-lead: calc(clamp(16px, 12.431px + 0.9150vw, 30px) * var(--ui-scale));
+  --text-body: max(13px, calc(clamp(14px, 11.196px + 0.7190vw, 25px) * var(--ui-scale)));
+  --text-body-sm: max(12px, calc(clamp(13px, 10.451px + 0.6536vw, 23px) * var(--ui-scale)));
+  --text-eyebrow: max(12px, calc(clamp(13px, 10.451px + 0.6536vw, 23px) * var(--ui-scale)));
+  --text-label: calc(clamp(15px, 10.412px + 1.1765vw, 33px) * var(--ui-scale));
+  --text-label-sm: max(12px, calc(clamp(13px, 9.431px + 0.9150vw, 27px) * var(--ui-scale)));
+  --text-input: max(14px, calc(clamp(15px, 9.902px + 1.3072vw, 35px) * var(--ui-scale)));
+  --text-stream: max(10px, calc(clamp(11px, 6.667px + 1.1111vw, 28px) * var(--ui-scale)));
+  --text-code: max(11px, calc(clamp(11px, 8.706px + 0.5882vw, 20px) * var(--ui-scale)));
+  --text-fine: max(11px, calc(clamp(12px, 9.196px + 0.7190vw, 23px) * var(--ui-scale)));
+
+  /* Pastilles du hero */
+  --text-badge-num: calc(clamp(32px, 25.627px + 1.6340vw, 57px) * var(--ui-scale));
+  --text-badge-label: max(12px, calc(clamp(16px, 12.941px + 0.7843vw, 28px) * var(--ui-scale)));
+
+  /* Accordéon */
+  --text-promise-num: calc(clamp(24px, 12.529px + 2.9412vw, 69px) * var(--ui-scale));
+  --text-promise-title: calc(clamp(26px, 16.314px + 2.4837vw, 64px) * var(--ui-scale));
+  --text-promise-kicker: max(12px, calc(clamp(14px, 9.157px + 1.2418vw, 33px) * var(--ui-scale)));
+  --text-promise-body: max(14px, calc(clamp(16px, 11.667px + 1.1111vw, 33px) * var(--ui-scale)));
+  --text-promise-cta: calc(clamp(16px, 10.902px + 1.3072vw, 36px) * var(--ui-scale));
+  --text-promise-code: max(11px, calc(clamp(13px, 10.196px + 0.7190vw, 24px) * var(--ui-scale)));
+  --text-rail-label: calc(clamp(34px, 24.314px + 2.4837vw, 72px) * var(--ui-scale));
+
+  /* Pied de page */
+  --text-footer-pitch: calc(clamp(20px, 12.098px + 2.0261vw, 51px) * var(--ui-scale));
+  --text-footer-nav: max(14px, calc(clamp(16px, 11.157px + 1.2418vw, 35px) * var(--ui-scale)));
+  --text-footer-mail: max(14px, calc(clamp(16px, 10.137px + 1.5033vw, 39px) * var(--ui-scale)));
+  --text-footer-fine: max(12px, calc(clamp(13px, 8.412px + 1.1765vw, 31px) * var(--ui-scale)));
+
+  /* --- Espacements — utilisables en px-gutter, pt-section, gap-card ------ */
+  --spacing-gutter: calc(calc(clamp(22px, -2.980px + 6.4052vw, 120px) * var(--ui-scale)) + 30px);
+  --spacing-grid: calc(clamp(20px, 16.431px + 0.9150vw, 34px) * var(--ui-scale));
+  --spacing-card: calc(clamp(16px, 7.843px + 2.0915vw, 48px) * var(--ui-scale));
+  --spacing-section: calc(clamp(64px, 34.431px + 7.5817vw, 180px) * var(--ui-scale));
+  --spacing-block: calc(clamp(28px, 14.745px + 3.3987vw, 80px) * var(--ui-scale));
+  --spacing-tight: calc(clamp(12px, 6.902px + 1.3072vw, 32px) * var(--ui-scale));
+  --spacing-hero-cta: calc(clamp(18px, 10.863px + 1.8301vw, 46px) * var(--ui-scale));
+
+  /* --- Rayons — utilisables en rounded-card, rounded-banner… ------------- */
+  --radius-card: calc(clamp(20px, 17.196px + 0.7190vw, 31px) * var(--ui-scale));
+  --radius-panel: calc(clamp(24px, 11.000px + 3.3333vw, 75px) * var(--ui-scale));
+  --radius-section: calc(clamp(28px, 15.765px + 3.1373vw, 76px) * var(--ui-scale));
+  --radius-banner: calc(clamp(28px, 14.490px + 3.4641vw, 81px) * var(--ui-scale));
+  --radius-input: calc(clamp(26px, 22.686px + 0.8497vw, 39px) * var(--ui-scale));
+  --radius-pill: calc(clamp(26px, 19.373px + 1.6993vw, 52px) * var(--ui-scale));
+  --radius-chip: calc(clamp(22px, 16.647px + 1.3725vw, 43px) * var(--ui-scale));
+  --radius-badge: calc(clamp(10px, 6.686px + 0.8497vw, 23px) * var(--ui-scale));
+  --radius-promise: calc(clamp(16px, 9.627px + 1.6340vw, 41px) * var(--ui-scale));
+  --radius-promise-open: calc(clamp(16px, -5.412px + 5.4902vw, 100px) * var(--ui-scale));
+  --radius-footer-mail: calc(clamp(22px, 17.667px + 1.1111vw, 39px) * var(--ui-scale));
+
+  /* --- Animations — utilisables en animate-float, animate-code-scroll ---- */
+  --animate-float: idaFloat 6s ease-in-out infinite;
+  --animate-stream-rise: idaStreamRise 12s linear infinite;
+  --animate-code-scroll: idaCodeScroll 26s linear infinite;
+}
+
+/* --------------------------------------------------------------------------
+   Variables de plomberie — pas des utilitaires, mais lues par les composants.
+   -------------------------------------------------------------------------- */
+@layer base {
+:root {
+  /* Facteur d'échelle global.
+     1   = les valeurs relevées sur le design d'origine.
+     0.7 = tout réduit de 30 %. UNE SEULE valeur à changer pour réajuster. */
+  --ui-scale: .7;
+
+  /* Largeur du canevas d'origine — le contenu ne s'étire pas au-delà */
+  --page-max: 1920px;
+
+  /* Décalage des ombres « dures » (boutons, champs, pastilles) */
+  --offset-x: calc(clamp(5px, 2.961px + 0.5229vw, 13px) * var(--ui-scale));
+  --offset-y: calc(clamp(5px, 2.706px + 0.5882vw, 14px) * var(--ui-scale));
+
+  /* En-tête : dimensions fluides propres, pour qu'il rétrécisse avec la
+     fenêtre au lieu de basculer brutalement en menu burger. */
+  --entete-logo: clamp(52px, 2.00px + 5.000vw, 98px);
+  --entete-h: clamp(50px, 4.35px + 4.565vw, 92px);
+  --entete-fs: clamp(15px, 3.70px + 1.130vw, 25.4px);
+  --entete-fs-cta: clamp(15px, -0.11px + 1.511vw, 28.9px);
+  --entete-pad: clamp(16px, 2.2vw, 48px);
+  --entete-haut: calc(var(--entete-pad) * 2 + var(--entete-logo));
+
+  /* Hauteurs de contrôles — plancher 44px, seuil de cible tactile */
+  --h-btn: max(44px, calc(clamp(52px, 38.490px + 3.4641vw, 105px) * var(--ui-scale)));
+  --h-input: max(44px, calc(clamp(52px, 37.471px + 3.7255vw, 109px) * var(--ui-scale)));
+  --h-icon-btn: max(44px, calc(clamp(52px, 33.647px + 4.7059vw, 124px) * var(--ui-scale)));
+  --h-circle-btn: max(44px, calc(clamp(46px, 29.176px + 4.3137vw, 112px) * var(--ui-scale)));
+  --h-footer-send: calc(var(--h-input) + var(--offset-y));
+  --logo-h: calc(clamp(44px, 26.667px + 4.4444vw, 112px) * var(--ui-scale));
+  --icon-lg: calc(clamp(56px, 36.627px + 4.9673vw, 132px) * var(--ui-scale));
+
+  /* Accordéon — géométrie relevée sur les deux gabarits d'origine */
+  --promise-h: calc(clamp(420px, 341.490px + 20.1307vw, 728px) * var(--ui-scale));
+  --promise-w-closed: calc(clamp(72px, 38.608px + 8.5621vw, 203px) * var(--ui-scale));
+  --promise-w-open: calc(clamp(300px, 149.098px + 38.6928vw, 892px) * var(--ui-scale));
+  --promise-panel-top: calc(clamp(64px, 13.529px + 12.9412vw, 262px) * var(--ui-scale));
+  --promise-pad: calc(clamp(22px, 16.647px + 1.3725vw, 43px) * var(--ui-scale));
+  --promise-rail-pad: calc(clamp(14px, 2.275px + 3.0065vw, 60px) * var(--ui-scale));
+
+  /* Raccourci de bordure, repris partout */
+  --border-ink: 1px solid var(--color-ida-ink);
+}
+}

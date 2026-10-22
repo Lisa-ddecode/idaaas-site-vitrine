@@ -1,0 +1,11 @@
+/* ==========================================================================
+   IDAaaS — point d'entrée des styles
+   L'ordre compte : Tailwind déclare ses couches (theme, base, components,
+   utilities), puis chaque fichier vient se ranger dans la bonne.
+   Une classe utilitaire l'emporte donc toujours sur un style de composant.
+   ========================================================================== */
+@import "tailwindcss";
+@import "./theme.css";        /* les variables : couleurs, tailles, espacements */
+@import "./base.css";         /* polices, remise à zéro, accessibilité */
+@import "./components.css";   /* boutons, champs, en-tête, pied de page */
+@import "./accueil.css";      /* ce qui n'existe que sur la page d'accueil */

@@ -1,0 +1,348 @@
+/* ==========================================================================
+   IDAaaS — mise en page, composants, en-tête et pied de page
+   Les valeurs viennent de theme.css (bloc @theme). Ne rien coder en dur ici :
+   une valeur en dur échappe à --ui-scale et casse le rendu une fois réduit.
+   ========================================================================== */
+
+@layer components {
+/* --------------------------------------------------------------------------
+   4. Mise en page
+   -------------------------------------------------------------------------- */
+.ida-shell {
+  max-width: var(--page-max); margin-inline: auto;
+  padding-bottom: var(--spacing-gutter);   /* le pied ne colle pas au bas */
+}
+
+.ida-section { padding-inline: var(--spacing-gutter); }
+.ida-section + .ida-section { padding-top: var(--spacing-section); }
+
+.ida-eyebrow {
+  font-family: var(--font-sub);
+  font-size: var(--text-eyebrow);
+  line-height: var(--leading-flat);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--color-ida-orange-deep);
+  margin-bottom: var(--spacing-tight);
+}
+
+.ida-lead {
+  font-size: var(--text-lead);
+  line-height: var(--leading-body);
+  color: var(--color-text-muted);
+  max-width: 62ch;
+}
+
+/* --------------------------------------------------------------------------
+   5. Composants
+   -------------------------------------------------------------------------- */
+
+/* Bouton — « hard offset » : une couche pleine décalée derrière, cernée d'encre */
+.ida-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: var(--h-btn);
+  padding-inline: clamp(20px, -1.74px + 2.174vw, 40px);
+  background: var(--color-ida-pink);
+  border: var(--border-ink);
+  border-radius: 999px;   /* pilule parfaite quelle que soit la hauteur */
+  font-family: var(--font-sub);
+  font-size: var(--text-label);
+  line-height: var(--leading-flat);
+  text-transform: uppercase;
+  color: var(--color-ida-ink);
+  cursor: pointer;
+  text-align: center;
+  box-shadow: calc(var(--offset-x) * -1) var(--offset-y) 0 0 var(--color-ida-cream),
+              calc(var(--offset-x) * -1) var(--offset-y) 0 1px var(--color-ida-ink);
+  transition: transform .18s ease, background-color .18s ease;
+}
+.ida-btn:hover { transform: translateY(-6px); background: var(--color-ida-orange); color: var(--color-ida-ink); }
+.ida-btn:active { transform: translate(calc(var(--offset-x) * -1), var(--offset-y)); box-shadow: none; }
+
+.ida-btn--cream  { background: var(--color-ida-cream);
+  box-shadow: calc(var(--offset-x) * -1) var(--offset-y) 0 0 var(--color-ida-pink),
+              calc(var(--offset-x) * -1) var(--offset-y) 0 1px var(--color-ida-ink); }
+.ida-btn--flat   { box-shadow: none; }
+.ida-btn--flat:active { transform: translateY(3px); }
+
+/* Bouton icône rond */
+.ida-icon-btn {
+  display: inline-grid; place-items: center; flex-shrink: 0;
+  width: var(--h-icon-btn); height: var(--h-icon-btn);
+  padding: 0;
+  background: var(--color-ida-pink);
+  border: var(--border-ink);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform .18s ease;
+}
+.ida-icon-btn:hover { transform: translateY(-5px); }
+.ida-icon-btn svg { width: 50%; height: 50%; }
+.ida-icon-btn--sm { width: var(--h-circle-btn); height: var(--h-circle-btn); }
+
+/* Champ de saisie */
+.ida-input {
+  display: flex; align-items: center; flex: 1 1 auto; min-width: 0;
+  min-height: var(--h-input);
+  padding-inline: clamp(20px, 7.3px + 3.3vw, 51px);
+  background: var(--color-ida-cream);
+  border: var(--border-ink);
+  border-radius: var(--radius-input);
+  box-shadow: calc(var(--offset-x) * -1) var(--offset-y) 0 0 var(--color-ida-orange),
+              calc(var(--offset-x) * -1) var(--offset-y) 0 1px var(--color-ida-ink);
+}
+.ida-input input {
+  width: 100%; align-self: stretch; min-height: 44px;
+  border: 0; outline: 0; background: transparent;
+  font-family: var(--font-core); font-size: var(--text-input); color: var(--color-ida-ink);
+}
+.ida-input input::placeholder { color: var(--color-ida-gray); }
+
+/* Carte */
+.ida-card {
+  background: var(--color-surface-card);
+  border: var(--border-ink);
+  border-radius: var(--radius-card);
+}
+
+/* --------------------------------------------------------------------------
+   6. En-tête
+   -------------------------------------------------------------------------- */
+.ida-header {
+  position: relative; z-index: 1;   /* au-dessus de la trame du hero */
+  display: flex; align-items: center; gap: 0;
+  padding-block: var(--entete-pad);
+}
+
+.ida-header__logo { flex-shrink: 0; margin-right: clamp(10px, 1.4vw, 36px); }
+.ida-header__logo img { height: var(--entete-logo); width: auto; max-width: none; }
+
+.ida-nav {
+  display: flex; align-items: center;
+  gap: clamp(14px, -29.48px + 4.348vw, 54px);
+  margin-left: auto;
+  padding-inline: clamp(18px, -25.48px + 4.348vw, 58px);
+  min-width: 0;
+  height: var(--entete-h);
+  background: var(--color-ida-cream);
+  border: var(--border-ink);
+  border-radius: 999px;
+}
+.ida-nav a {
+  font-family: var(--font-sub);
+  font-size: var(--entete-fs);
+  line-height: var(--leading-flat);
+  white-space: nowrap;
+}
+.ida-nav a[aria-current="page"] { color: var(--color-ida-orange-deep); }
+
+.ida-header__cta {
+  flex-shrink: 0; white-space: nowrap; margin-left: -1px;
+  min-height: var(--entete-h);
+  font-size: var(--entete-fs-cta);
+}
+
+.ida-lang {
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+  margin-left: clamp(8px, 1vw, 20px);
+  font-family: var(--font-sub); font-size: var(--entete-fs);
+  line-height: var(--leading-flat); letter-spacing: .03em;
+}
+.ida-lang span[aria-current] { color: var(--color-ida-ink); }
+.ida-lang .ida-lang__sep { width: 1px; height: 1em; background: var(--color-ida-ink); opacity: .35; }
+.ida-lang a { color: var(--color-ida-gray); }
+
+/* Bouton hamburger — masqué au-dessus du point de rupture */
+.ida-burger {
+  display: none;
+  place-items: center; margin-left: auto;
+  width: 52px; height: 52px; padding: 0;
+  background: var(--color-ida-cream); border: var(--border-ink); border-radius: 50%;
+  cursor: pointer;
+}
+.ida-burger span {
+  display: block; width: 22px; height: 2px; background: var(--color-ida-ink);
+  box-shadow: 0 -7px 0 var(--color-ida-ink), 0 7px 0 var(--color-ida-ink);
+}
+
+@media (max-width: 999px) {
+  :root { --entete-haut: calc(var(--entete-pad) * 2 + var(--entete-logo) + 52px); }
+  .ida-burger { display: grid; }
+  .ida-header__cta, .ida-lang { order: 3; }
+  .ida-nav {
+    order: 4; width: 100%; margin-left: 0; height: auto;
+    flex-direction: column; align-items: flex-start;
+    gap: 22px; padding: 24px 26px;
+    background: var(--color-surface-card);
+    border-radius: var(--radius-card);
+  }
+  .ida-header { flex-wrap: wrap; }
+  .ida-header > .ida-nav[hidden] { display: none; }
+}
+
+/* --------------------------------------------------------------------------
+   7. Pied de page — proportions relevées sur le design d'origine
+   -------------------------------------------------------------------------- */
+.ida-footer {
+  background: var(--color-ida-cream);
+  color: var(--color-text-body);
+  border: var(--border-ink);
+  border-radius: var(--radius-banner);
+  padding: clamp(28px, 3.3vw, 64px) clamp(28px, 3.3vw, 64px) clamp(10px, 0.85vw, 16px);
+  margin-top: 0;                      /* accolé au bandeau kaki */
+  margin-inline: var(--spacing-gutter);  /* même gouttière que les sections */
+}
+.ida-footer a { color: var(--color-text-body); }
+.ida-footer a:hover { color: var(--color-ida-orange-deep); }
+
+.ida-footer__grid {
+  display: grid;
+  grid-template-columns: 5.1fr 2.4fr 3.5fr 6.6fr;
+  gap: clamp(16px, 1.6vw, 32px);
+  align-items: start;
+}
+
+/* 152 px canevas dans le design, contre 112 pour l'en-tête.
+   Volontairement hors --ui-scale : le logo se mesure à la largeur du pied,
+   qui suit la fenêtre, et non à l'échelle typographique. */
+.ida-footer__brand img {
+  height: clamp(40px, 11.45px + 7.32vw, 152px);
+  width: auto; max-width: 100%;
+  margin-left: -20px;
+}
+.ida-footer__brand p {
+  margin-top: var(--spacing-tight);
+  font-size: var(--text-footer-nav);
+  line-height: 1.35;
+  color: var(--color-text-body);
+}
+
+.ida-footer__nav {
+  display: flex; flex-direction: column;
+  gap: clamp(10px, 1vw, 19px);
+  font-size: var(--text-footer-nav);
+  padding-top: clamp(6px, .9vw, 18px);
+}
+
+.ida-footer__contact {
+  margin-left: -30px;
+  /* La première ligne de l'accroche s'aligne sur celle des liens de menu.
+     Les deux polices n'ont ni la même taille ni le même interligne : on
+     compense le demi-interligne et la hauteur d'œil de chacune. */
+  padding-top: max(0px, calc(
+    clamp(6px, .9vw, 18px)
+    + 1.025 * var(--text-footer-nav)
+    - 0.91  * var(--text-footer-pitch)
+  ));
+}
+
+.ida-footer__pitch {
+  font-family: var(--font-sub);
+  font-size: var(--text-footer-pitch);
+  line-height: 1.22;
+  max-width: 34ch;
+}
+
+.ida-footer__mailrow {
+  display: flex; align-items: center;
+  gap: clamp(10px, 1.1vw, 22px);
+  margin-top: var(--spacing-tight);
+}
+.ida-footer__mail {
+  flex: 1 1 auto; min-width: 0;
+  display: flex; align-items: center;
+  min-height: var(--h-input);
+  padding-inline: clamp(18px, 1.9vw, 36px);
+  background: var(--color-surface-card);
+  border: var(--border-ink);
+  border-radius: var(--radius-footer-mail);
+  font-size: var(--text-footer-mail);
+  box-shadow: calc(var(--offset-x) * -1) var(--offset-y) 0 0 var(--color-ida-orange),
+              calc(var(--offset-x) * -1) var(--offset-y) 0 1px var(--color-ida-ink);
+}
+.ida-footer__send {
+  flex-shrink: 0;
+  display: inline-grid; place-items: center;
+  width: var(--h-footer-send); height: var(--h-footer-send);
+  background: var(--color-ida-pink);
+  border: var(--border-ink);
+  border-radius: 50%;
+  transition: transform .18s ease;
+}
+.ida-footer__send { color: var(--color-ida-ink); }
+.ida-footer__send:hover { transform: translateY(-5px); color: var(--color-ida-ink); }
+.ida-footer__send svg { width: 52%; height: 50%; }
+
+.ida-footer__bottom {
+  margin-top: clamp(26px, 3.4vw, 66px);
+  display: flex; flex-direction: column;
+  gap: clamp(10px, 1.1vw, 20px);
+}
+.ida-footer__social {
+  display: inline-grid; place-items: center;
+  width: calc(52px * var(--ui-scale));
+  height: calc(52px * var(--ui-scale));
+}
+.ida-footer__social img { width: 100%; height: 100%; }
+.ida-footer__legal {
+  display: flex; align-items: center;
+  gap: clamp(28px, 5.2vw, 100px);
+  font-size: var(--text-footer-fine);
+  color: var(--color-text-muted);
+}
+.ida-footer__legal a { color: var(--color-text-muted); }
+
+/* Les quatre colonnes tiennent jusqu'à 820px : le pied garde ses
+   proportions au lieu de s'empiler et de devenir carré. */
+@media (max-width: 819px) {
+  /* Étape intermédiaire : une grille 2 × 2, pas quatre bandes empilées. */
+  .ida-footer__grid { grid-template-columns: 1fr 1fr; }
+  .ida-footer__brand   { grid-area: 1 / 1; }
+  .ida-footer__contact { grid-area: 1 / 2; margin-left: 0; }
+  .ida-footer__nav:nth-of-type(1) { grid-area: 2 / 1; }
+  .ida-footer__nav:nth-of-type(2) { grid-area: 2 / 2; }
+  .ida-footer__pitch { max-width: none; }
+}
+@media (max-width: 560px) {
+  /* Les deux colonnes de liens restent côte à côte : en une seule colonne,
+     avec des cibles de 44px, le pied devenait interminable. */
+  .ida-footer__grid { grid-template-columns: 1fr 1fr; row-gap: var(--spacing-block); }
+  .ida-footer__brand   { grid-area: 1 / 1 / 2 / -1; }
+  .ida-footer__nav:nth-of-type(1) { grid-area: 2 / 1; }
+  .ida-footer__nav:nth-of-type(2) { grid-area: 2 / 2; }
+  .ida-footer__contact { grid-area: 3 / 1 / 4 / -1; }
+  .ida-footer__legal { flex-direction: column; align-items: flex-start; gap: 10px; }
+}
+
+/* --------------------------------------------------------------------------
+   8. Cibles tactiles — 44px minimum sur écran tactile
+   -------------------------------------------------------------------------- */
+@media (pointer: coarse), (max-width: 1199px) {
+  .ida-nav a,
+  .ida-footer__nav a,
+  .ida-footer__bottom a,
+  .ida-footer__mail,
+  .ida-lang a,
+  .ida-lang span[aria-current] {
+    display: inline-flex; align-items: center;
+    min-height: 44px;
+  }
+  .ida-lang { gap: 14px; }
+  .ida-footer__social { width: 44px; height: 44px; }
+  .ida-footer__brand > a,
+  .ida-header__logo { display: inline-flex; align-items: center; min-height: 44px; }
+}
+
+/* --------------------------------------------------------------------------
+   9. Mouvement réduit
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+}
